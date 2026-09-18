@@ -26,3 +26,16 @@ class Animal(db.Model):
         if years > 0:
             return f"{years}y {months}m"
         return f"{months}m"
+    
+class Crop(db.Model):
+    __tablename__ = "crops"
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80), nullable=False)
+    field_location = db.Column(db.String(80))
+    area_acres = db.Column(db.Float)
+    planting_date = db.Column(db.Date)
+    expected_harvest_date = db.Column(db.Date)
+    status = db.Column(db.String(30), default="Planted")  # Planted/Growing/Harvested
+    yield_amount_kg = db.Column(db.Float)
+    notes = db.Column(db.Text)

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if crop else 'Add' }} Crop - Farm Manager{% endblock %}
+{% block content %}
+  <h1>{{ 'Edit' if crop else 'Add' }} Crop</h1>
+  <div class="card">
+    <form method="POST">
+      <div class="field" style="margin-bottom:12px;">
+        <label>Crop Name</label>
+        <select name="name" required>
+          <option value="">-- Select --</option>
+          {% for crop_name in ["Maize", "Beans", "Wheat", "Rice", "Potatoes", "Tomatoes", "Cabbage", "Onions", "Sugarcane", "Coffee", "Tea"] %}
+          <option value="{{ crop_name }}" {{ 'selected' if crop and crop.name == crop_name }}>{{ crop_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="field" style="margin-bottom:12px;">
+        <label>Field / Location</label>
+        <input type="text" name="field_location" value="{{ crop.field_location if crop else '' }}">
+      </div>
+      <div class="field" style="margin-bottom:12px;">
+        <label>Area (acres)</label>
+        <input type="number" step="0.1" name="area_acres" value="{{ crop.area_acres if crop else '' }}">
+      </div>
+      <div class="field" style="margin-bottom:12px;">
+        <label>Status</label>
+        <select name="status">
+          <option value="Planted" {{ 'selected' if crop and crop.status=='Planted' }}>Planted</option>
+          <option value="Growing" {{ 'selected' if crop and crop.status=='Growing' }}>Growing</option>
+          <option value="Harvested" {{ 'selected' if crop and crop.status=='Harvested' }}>Harvested</option>
+        </select>
+      </div>
+      <div class="field" style="margin-bottom:12px;">
+        <label>Planting Date</label>
+        <input type="date" name="planting_date" value="{{ crop.planting_date if crop else '' }}">
+      </div>
+      <div class="field" style="margin-bottom:12px;">
+        <label>Expected Harvest Date</label>
+        <input type="date" name="expected_harvest_date" value="{{ crop.expected_harvest_date if crop else '' }}">
+      </div>
+      <div class="field" style="margin-bottom:12px;">
+        <label>Yield (kg)</label>
+        <input type="number" step="0.1" name="yield_amount_kg" value="{{ crop.yield_amount_kg if crop else '' }}">
+      </div>
+      <div class="field" style="margin-bottom:16px;">
+        <label>Notes</label>
+        <textarea name="notes" rows="3" style="width:100%; padding:9px; border:1px solid #dfe3da; border-radius:6px;">{{ crop.notes if crop else '' }}</textarea>
+      </div>
+      <button type="submit" class="btn">{{ 'Save Changes' if crop else 'Add Crop' }}</button>
+      <a href="{{ url_for('crops') }}" class="btn secondary">Cancel</a>
+    </form>
+  </div>
+{% endblock %}
