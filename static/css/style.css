@@ -1,0 +1,93 @@
+:root {
+  --green: #2f6d3a;
+  --green-dark: #234f2a;
+  --bg: #f6f7f2;
+  --card: #ffffff;
+  --text: #2b2b28;
+  --muted: #6b6f66;
+  --border: #dfe3da;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.navbar {
+  background: var(--green-dark);
+  color: white;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+}
+
+.navbar .brand {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.navbar nav a {
+  color: #eaf3e8;
+  text-decoration: none;
+  margin-left: 20px;
+  font-weight: 500;
+}
+
+.navbar nav a:hover {
+  text-decoration: underline;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 28px 20px 60px;
+}
+
+h1 {
+  color: var(--green-dark);
+  margin-bottom: 4px;
+}
+
+.subtitle {
+  color: var(--muted);
+  margin-top: 0;
+  margin-bottom: 24px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.stat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px;
+}
+
+.stat-card .value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--green-dark);
+}
+
+.stat-card .label {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+}

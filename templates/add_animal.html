@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}Add Animal - Farm Manager{% endblock %}
+{% block content %}
+<h1>{{ 'Edit' if animal else 'Add' }} Animal</h1>  <div class="card">
+    <form method="POST">
+      <div class="field" style="margin-bottom:12px;">
+        <label>Name</label>
+        <input type="text" name="name" value="{{ animal.name if animal else '' }}" required>
+      </div>
+     <div class="field" style="margin-bottom:12px;">
+  <label>Species</label>
+  <select name="species" id="species" required onchange="updateBreeds()">
+    <option value="">-- Select --</option>
+    <option value="Cow">Cow</option>
+    <option value="Goat">Goat</option>
+    <option value="Sheep">Sheep</option>
+    <option value="Pig">Pig</option>
+    <option value="Chicken">Chicken</option>
+    <option value="Duck">Duck</option>
+    <option value="Rabbit">Rabbit</option>
+  </select>
+</div>
+<div class="field" style="margin-bottom:12px;">
+  <label>Breed</label>
+  <select name="breed" id="breed">
+    <option value="">-- Select species first --</option>
+  </select>
+</div>
+      <div class="field" style="margin-bottom:12px;">
+        <label>Gender</label>
+        <select name="gender">
+          <option value="">-- Select --</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+      </div>
+      <div class="field" style="margin-bottom:12px;">
+        <label>Birth Date</label>
+        <input type="date" name="birth_date">
+      </div>
+      <div class="field" style="margin-bottom:12px;">
+        <label>Weight (kg)</label>
+        <input type="number" step="0.1" name="weight_kg">
+      </div>
+      <div class="field" style="margin-bottom:12px;">
+        <label>Health Status</label>
+        <select name="health_status">
+          <option value="Healthy">Healthy</option>
+          <option value="Sick">Sick</option>
+          <option value="Under Treatment">Under Treatment</option>
+        </select>
+      </div>
+      <div class="field" style="margin-bottom:16px;">
+        <label>Notes</label>
+        <textarea name="notes" rows="3" style="width:100%; padding:9px; border:1px solid #dfe3da; border-radius:6px;"></textarea>
+      </div>
+<button type="submit" class="btn">{{ 'Save Changes' if animal else 'Add Animal' }}</button>
+      <a href="{{ url_for('animals') }}" class="btn secondary">Cancel</a>
+    </form>
+  </div>
+{% endblock %}
+<script>
+  const breedOptions = {
+    "Cow": ["Friesian", "Jersey", "Ayrshire", "Guernsey", "Zebu", "Boran"],
+    "Goat": ["Boer", "Saanen", "Toggenburg", "Kalahari Red", "Local/Indigenous"],
+    "Sheep": ["Dorper", "Merino", "Suffolk", "Red Maasai"],
+    "Pig": ["Large White", "Landrace", "Duroc", "Hampshire"],
+    "Chicken": ["Broiler", "Layer", "Kienyeji (Indigenous)", "Rhode Island Red", "Kuroiler"],
+    "Duck": ["Pekin", "Muscovy", "Khaki Campbell"],
+    "Rabbit": ["New Zealand White", "California White", "Chinchilla"]
+  };
+
+  function updateBreeds() {
+    const species = document.getElementById("species").value;
+    const breedSelect = document.getElementById("breed");
+    breedSelect.innerHTML = "";
+
+    if (!species || !breedOptions[species]) {
+      breedSelect.innerHTML = '<option value="">-- Select species first --</option>';
+      return;
+    }
+
+    breedSelect.innerHTML = '<option value="">-- Select --</option>';
+    breedOptions[species].forEach(breed => {
+      const opt = document.createElement("option");
+      opt.value = breed;
+      opt.textContent = breed;
+      breedSelect.appendChild(opt);
+    });
+  }
+</script>
