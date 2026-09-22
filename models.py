@@ -39,3 +39,13 @@ class Crop(db.Model):
     status = db.Column(db.String(30), default="Planted")  # Planted/Growing/Harvested
     yield_amount_kg = db.Column(db.Float)
     notes = db.Column(db.Text)
+class Staff(db.Model):
+    __tablename__ = "staff"
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(80), nullable=False)
+    role = db.Column(db.String(50))
+    phone = db.Column(db.String(30))
+    hire_date = db.Column(db.Date)
+    monthly_salary = db.Column(db.Float, default=0)
+    status = db.Column(db.String(20), default="Active")  # Active/Inactive

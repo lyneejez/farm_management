@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if member else 'Add' }} Staff - Farm Manager{% endblock %}
+{% block content %}
+  <h1>{{ 'Edit' if member else 'Add' }} Staff Member</h1>
+  <div class="card">
+    <form method="POST">
+      <div class="field" style="margin-bottom:12px;">
+        <label>Full Name</label>
+        <input type="text" name="name" required value="{{ member.name if member else '' }}">
+      </div>
+      <div class="field" style="margin-bottom:12px;">
+        <label>Role</label>
+        <select name="role">
+          <option value="">-- Select --</option>
+          {% for role_name in ["Herder", "Farmhand", "Manager", "Veterinary Assistant", "Driver", "Security"] %}
+          <option value="{{ role_name }}" {{ 'selected' if member and member.role == role_name }}>{{ role_name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="field" style="margin-bottom:12px;">
+        <label>Phone</label>
+        <input type="text" name="phone" value="{{ member.phone if member else '' }}">
+      </div>
+      <div class="field" style="margin-bottom:12px;">
+        <label>Monthly Salary</label>
+        <input type="number" step="0.01" name="monthly_salary" value="{{ member.monthly_salary if member else '' }}">
+      </div>
+      <div class="field" style="margin-bottom:12px;">
+        <label>Hire Date</label>
+        <input type="date" name="hire_date" value="{{ member.hire_date if member else '' }}">
+      </div>
+      <div class="field" style="margin-bottom:16px;">
+        <label>Status</label>
+        <select name="status">
+          <option value="Active" {{ 'selected' if member and member.status=='Active' }}>Active</option>
+          <option value="Inactive" {{ 'selected' if member and member.status=='Inactive' }}>Inactive</option>
+        </select>
+      </div>
+      <button type="submit" class="btn">{{ 'Save Changes' if member else 'Add Staff Member' }}</button>
+      <a href="{{ url_for('staff') }}" class="btn secondary">Cancel</a>
+    </form>
+  </div>
+{% endblock %}
