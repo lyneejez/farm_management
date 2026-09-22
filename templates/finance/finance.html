@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Finance - Farm Manager{% endblock %}
+{% block content %}
+  <h1>Finance</h1>
+  <p class="subtitle">{{ transactions|length }} transaction(s)</p>
+  <a href="{{ url_for('add_transaction') }}" class="btn">+ Add Transaction</a>
+
+  <div class="stats-grid" style="margin-top:16px;">
+    <div class="stat-card">
+      <div class="value">{{ "%.2f"|format(income) }}</div>
+      <div class="label">Total Income</div>
+    </div>
+    <div class="stat-card">
+      <div class="value">{{ "%.2f"|format(expense) }}</div>
+      <div class="label">Total Expenses</div>
+    </div>
+    <div class="stat-card">
+      <div class="value">{{ "%.2f"|format(balance) }}</div>
+      <div class="label">Net Balance</div>
+    </div>
+  </div>
+
+  <div class="card">
+    {% if transactions %}
+    <table style="width:100%; border-collapse: collapse;">
+      <thead>
+        <tr>
+          <th style="text-align:left; padding:8px; border-bottom:1px solid #dfe3da;">Date</th>
+          <th style="text-align:left; padding:8px; border-bottom:1px solid #dfe3da;">Type</th>
+          <th style="text-align:left; padding:8px; border-bottom:1px solid #dfe3da;">Category</th>
+          <th style="text-align:left; padding:8px; border-bottom:1px solid #dfe3da;">Amount</th>
+          <th style="text-align:left; padding:8px; border-bottom:1px solid #dfe3da;">Description</th>
+          <th style="padding:8px; border-bottom:1px solid #dfe3da;"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for t in transactions %}
+        <tr>
+          <td style="padding:8px; border-bottom:1px solid #dfe3da;">{{ t.date }}</td>
+          <td style="padding:8px; border-bottom:1px solid #dfe3da;">{{ t.type }}</td>
+          <td style="padding:8px; border-bottom:1px solid #dfe3da;">{{ t.category or '-' }}</td>
+          <td style="padding:8px; border-bottom:1px solid #dfe3da;">{{ "%.2f"|format(t.amount) }}</td>
+          <td style="padding:8px; border-bottom:1px solid #dfe3da;">{{ t.description or '-' }}</td>
+          <td style="padding:8px; border-bottom:1px solid #dfe3da;">
+            <form method="POST" action="{{ url_for('delete_transaction', transaction_id=t.id) }}" style="display:inline;" onsubmit="return confirm('Remove this transaction?');">
+              <button type="submit" class="btn" style="background:#b3382c; padding:5px 10px; font-size:0.8rem;">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p style="color:#6b6f66;">No transactions yet.</p>
+    {% endif %}
+  </div>
+{% endblock %}

@@ -49,3 +49,12 @@ class Staff(db.Model):
     hire_date = db.Column(db.Date)
     monthly_salary = db.Column(db.Float, default=0)
     status = db.Column(db.String(20), default="Active")  # Active/Inactive
+class Transaction(db.Model):
+    __tablename__ = "transactions"
+
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.Date, default=date.today)
+    type = db.Column(db.String(10), nullable=False)  # Income or Expense
+    amount = db.Column(db.Float, nullable=False)
+    category = db.Column(db.String(50))
+    description = db.Column(db.Text)
