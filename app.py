@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-from models import db, Animal, Crop
+from models import db, Animal, Crop, Staff
 from flask import Flask, render_template, request, redirect, url_for
 from datetime import datetime
 
@@ -18,7 +18,7 @@ def dashboard():
         "total_animals": Animal.query.count(),
         "sick_animals": Animal.query.filter_by(health_status="Sick").count(),
         "total_crops": Crop.query.count(),
-        "active_staff": 0,
+        "active_staff": Staff.query.filter_by(status="Active").count(),
     }
     return render_template("dashboard.html", stats=stats)
 
@@ -133,13 +133,65 @@ def edit_crop(crop_id):
         return redirect(url_for("crops"))
 
     return render_template("crops/add_crop.html", crop=crop)
-
-
 @app.route("/crops/<int:crop_id>/delete", methods=["POST"])
 def delete_crop(crop_id):
     crop = Crop.query.get_or_404(crop_id)
     db.session.delete(crop)
     db.session.commit()
     return redirect(url_for("crops"))
+
+@app.route("/staff")
+def staff():
+    all_staff = Staff.query.order_by(Staff.id.desc()).all()
+    return render_template("/staff/staff.html", staff=all_staff)
+
+@app.route("/staff/add", methods=["GET", "POST"])
+def add_staff():
+    if request.method == "POST":
+        hire_date = None
+        if request.form.get("hire_date"):
+            hire_date = datetime.strptime(request.form["hire_date"], "%Y-%m-%d").date()
+
+        member = Staff(
+            name=request.form["name"],
+            role=request.form.get("role"),
+            phone=request.form.get("phone"),
+            hire_date=hire_date,
+            monthly_salary=float(request.form["monthly_salary"]) if request.form.get("monthly_salary") else 0,
+            status=request.form.get("status", "Active"),
+        )
+        db.session.add(member)
+        db.session.commit()
+        return redirect(url_for("staff"))
+
+    return render_template("/staff/add_staff.html", member=None)
+
+
+@app.route("/staff/<int:staff_id>/edit", methods=["GET", "POST"])
+def edit_staff(staff_id):
+    member = Staff.query.get_or_404(staff_id)
+    if request.method == "POST":
+        hire_date = None
+        if request.form.get("hire_date"):
+            hire_date = datetime.strptime(request.form["hire_date"], "%Y-%m-%d").date()
+
+        member.name = request.form["name"]
+        member.role = request.form.get("role")
+        member.phone = request.form.get("phone")
+        member.hire_date = hire_date
+        member.monthly_salary = float(request.form["monthly_salary"]) if request.form.get("monthly_salary") else 0
+        member.status = request.form.get("status", "Active")
+        db.session.commit()
+        return redirect(url_for("staff"))
+
+    return render_template("/staff/add_staff.html", member=member)
+
+
+@app.route("/staff/<int:staff_id>/delete", methods=["POST"])
+def delete_staff(staff_id):
+    member = Staff.query.get_or_404(staff_id)
+    db.session.delete(member)
+    db.session.commit()
+    return redirect(url_for("staff"))
 if __name__ == "__main__":
     app.run(debug=True)
