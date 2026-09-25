@@ -1,43 +1,41 @@
 {% extends "base.html" %}
 {% block title %}Animals - Farm Manager{% endblock %}
+{% block page_title %}Animals{% endblock %}
+{% block page_subtitle %}{{ animals|length }} record(s){% endblock %}
+
 {% block content %}
-  <h1>Animals</h1>
-  <p class="subtitle">{{ animals|length }} record(s)</p>
-  <a href="{{ url_for('add_animal') }}" class="btn">+ Add Animal</a>
+  <div style="margin-bottom:16px;">
+    <a href="{{ url_for('add_animal') }}" class="btn">+ Add Animal</a>
+  </div>
 
   <div class="card">
     {% if animals %}
-    <table style="width:100%; border-collapse: collapse;">
+    <table>
       <thead>
         <tr>
-          <th style="text-align:left; padding:8px; border-bottom:1px solid #dfe3da;">Name</th>
-          <th style="text-align:left; padding:8px; border-bottom:1px solid #dfe3da;">Species</th>
-          <th style="text-align:left; padding:8px; border-bottom:1px solid #dfe3da;">Breed</th>
-          <th style="text-align:left; padding:8px; border-bottom:1px solid #dfe3da;">Age</th>
-<th style="text-align:left; padding:8px; border-bottom:1px solid #dfe3da;">Health</th>
-<th style="padding:8px; border-bottom:1px solid #dfe3da;">Actions</th>
+          <th>Name</th><th>Species</th><th>Breed</th><th>Age</th><th>Health</th><th></th>
         </tr>
       </thead>
       <tbody>
         {% for a in animals %}
         <tr>
-          <td style="padding:8px; border-bottom:1px solid #dfe3da;">{{ a.name }}</td>
-          <td style="padding:8px; border-bottom:1px solid #dfe3da;">{{ a.species }}</td>
-          <td style="padding:8px; border-bottom:1px solid #dfe3da;">{{ a.breed or '-' }}</td>
-          <td style="padding:8px; border-bottom:1px solid #dfe3da;">{{ a.age_display() }}</td>
-          <td style="padding:8px; border-bottom:1px solid #dfe3da;">{{ a.health_status }}</td>
-<td style="padding:8px; border-bottom:1px solid #dfe3da;">
-  <a href="{{ url_for('edit_animal', animal_id=a.id) }}" class="btn secondary" style="padding:5px 10px; font-size:0.8rem;">Edit</a>
-  <form method="POST" action="{{ url_for('delete_animal', animal_id=a.id) }}" style="display:inline;" onsubmit="return confirm('delete {{ a.name }}?');">
-    <button type="submit" class="btn" style="background:#b3382c; padding:5px 10px; font-size:0.8rem;">Delete</button>
-  </form>
-</td>
+          <td>{{ a.name }}</td>
+          <td>{{ a.species }}</td>
+          <td>{{ a.breed or '-' }}</td>
+          <td>{{ a.age_display() }}</td>
+          <td>{{ a.health_status }}</td>
+          <td>
+            <a href="{{ url_for('edit_animal', animal_id=a.id) }}" class="btn secondary" style="padding:5px 10px; font-size:0.8rem;">Edit</a>
+            <form method="POST" action="{{ url_for('delete_animal', animal_id=a.id) }}" style="display:inline;" onsubmit="return confirm('Remove {{ a.name }}?');">
+              <button type="submit" class="btn" style="background:#d64545; padding:5px 10px; font-size:0.8rem;">Delete</button>
+            </form>
+          </td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
     {% else %}
-    <p style="color:#6b6f66;">No animals yet.</p>
+    <p style="color:#7a877e;">No animals yet.</p>
     {% endif %}
   </div>
 {% endblock %}

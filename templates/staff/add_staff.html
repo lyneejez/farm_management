@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% block title %}{{ 'Edit' if member else 'Add' }} Staff - Farm Manager{% endblock %}
+{% block page_title %}{{ 'Edit' if member else 'Add' }} Staff Member{% endblock %}
+{% block page_subtitle %}{{ 'Update this record' if member else 'Add a new team member' }}{% endblock %}
+
 {% block content %}
-  <h1>{{ 'Edit' if member else 'Add' }} Staff Member</h1>
   <div class="card">
     <form method="POST">
       <div class="field" style="margin-bottom:12px;">

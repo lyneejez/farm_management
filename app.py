@@ -2,7 +2,7 @@ from flask import Flask, render_template
 from models import db, Animal, Crop, Staff, Transaction
 from sqlalchemy import func
 from flask import Flask, render_template, request, redirect, url_for
-from datetime import datetime
+from datetime import datetime, date
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///farm.db"
@@ -17,6 +17,36 @@ with app.app_context():
 def dashboard():
     income = db.session.query(func.sum(Transaction.amount)).filter_by(type="Income").scalar() or 0
     expense = db.session.query(func.sum(Transaction.amount)).filter_by(type="Expense").scalar() or 0
+
+    # Build last 6 months of income/expense totals for the chart
+    monthly_labels = []
+    monthly_income = []
+    monthly_expense = []
+
+    today = date.today()
+    for i in range(5, -1, -1):
+        month = today.month - i
+        year = today.year
+        while month <= 0:
+            month += 12
+            year -= 1
+
+        month_income = db.session.query(func.sum(Transaction.amount)).filter(
+            Transaction.type == "Income",
+            db.extract("year", Transaction.date) == year,
+            db.extract("month", Transaction.date) == month,
+        ).scalar() or 0
+
+        month_expense = db.session.query(func.sum(Transaction.amount)).filter(
+            Transaction.type == "Expense",
+            db.extract("year", Transaction.date) == year,
+            db.extract("month", Transaction.date) == month,
+        ).scalar() or 0
+
+        monthly_labels.append(date(year, month, 1).strftime("%b %Y"))
+        monthly_income.append(month_income)
+        monthly_expense.append(month_expense)
+
     stats = {
         "total_animals": Animal.query.count(),
         "sick_animals": Animal.query.filter_by(health_status="Sick").count(),
@@ -24,9 +54,15 @@ def dashboard():
         "active_staff": Staff.query.filter_by(status="Active").count(),
         "income": income,
         "expense": expense,
-        "balance": income - expense,   
-          }
-    return render_template("dashboard.html", stats=stats)
+        "balance": income - expense,
+    }
+    return render_template(
+        "dashboard.html",
+        stats=stats,
+        monthly_labels=monthly_labels,
+        monthly_income=monthly_income,
+        monthly_expense=monthly_expense,
+    )
 
 
 @app.route("/animals")
