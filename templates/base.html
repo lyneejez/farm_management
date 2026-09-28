@@ -4,19 +4,50 @@
   <meta charset="UTF-8">
   <title>{% block title %}Farm Manager{% endblock %}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 </head>
 <body>
-  <div class="navbar">
-    <div class="brand"> Farm Manager</div>
-    <nav>
-      <a href="/">Dashboard</a>
-      <a href="/animals">Animals</a>
-      <a href="/crops">Crops</a>
-      <a href="/staff">Staff</a>
-    </nav>
-  </div>
-  <div class="container">
-    {% block content %}{% endblock %}
+  <div class="app-shell">
+    <div class="sidebar">
+      <div class="brand">🌾 Smart Farm</div>
+      <nav>
+        <a href="{{ url_for('dashboard') }}" class="{{ 'active' if request.endpoint=='dashboard' }}">
+          <span class="icon">🏠</span> Dashboard
+        </a>
+        <a href="{{ url_for('animals') }}" class="{{ 'active' if request.endpoint in ['animals','add_animal','edit_animal'] }}">
+          <span class="icon">🐄</span> Animals
+        </a>
+        <a href="{{ url_for('crops') }}" class="{{ 'active' if request.endpoint in ['crops','add_crop','edit_crop'] }}">
+          <span class="icon">🌱</span> Crops
+        </a>
+        <a href="{{ url_for('staff') }}" class="{{ 'active' if request.endpoint in ['staff','add_staff','edit_staff'] }}">
+          <span class="icon">👥</span> Staff
+        </a>
+        <a href="{{ url_for('finance') }}" class="{{ 'active' if request.endpoint in ['finance','add_transaction'] }}">
+          <span class="icon">💰</span> Finance
+        </a>
+      </nav>
+    </div>
+
+    <div class="main-area">
+      <div class="topbar">
+        <div>
+          <h1>{% block page_title %}Dashboard{% endblock %}</h1>
+          <p class="subtitle">{% block page_subtitle %}Overview of your farm{% endblock %}</p>
+        </div>
+      </div>
+
+      <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+      </div>
+    </div>
   </div>
 </body>
 </html>

@@ -1,7 +1,8 @@
 from flask import Flask, render_template
-from models import db, Animal, Crop, Staff
+from models import db, Animal, Crop, Staff, Transaction
+from sqlalchemy import func
 from flask import Flask, render_template, request, redirect, url_for
-from datetime import datetime
+from datetime import datetime, date
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///farm.db"
@@ -14,13 +15,54 @@ with app.app_context():
 
 @app.route("/")
 def dashboard():
+    income = db.session.query(func.sum(Transaction.amount)).filter_by(type="Income").scalar() or 0
+    expense = db.session.query(func.sum(Transaction.amount)).filter_by(type="Expense").scalar() or 0
+
+    # Build last 6 months of income/expense totals for the chart
+    monthly_labels = []
+    monthly_income = []
+    monthly_expense = []
+
+    today = date.today()
+    for i in range(5, -1, -1):
+        month = today.month - i
+        year = today.year
+        while month <= 0:
+            month += 12
+            year -= 1
+
+        month_income = db.session.query(func.sum(Transaction.amount)).filter(
+            Transaction.type == "Income",
+            db.extract("year", Transaction.date) == year,
+            db.extract("month", Transaction.date) == month,
+        ).scalar() or 0
+
+        month_expense = db.session.query(func.sum(Transaction.amount)).filter(
+            Transaction.type == "Expense",
+            db.extract("year", Transaction.date) == year,
+            db.extract("month", Transaction.date) == month,
+        ).scalar() or 0
+
+        monthly_labels.append(date(year, month, 1).strftime("%b %Y"))
+        monthly_income.append(month_income)
+        monthly_expense.append(month_expense)
+
     stats = {
         "total_animals": Animal.query.count(),
         "sick_animals": Animal.query.filter_by(health_status="Sick").count(),
         "total_crops": Crop.query.count(),
         "active_staff": Staff.query.filter_by(status="Active").count(),
+        "income": income,
+        "expense": expense,
+        "balance": income - expense,
     }
-    return render_template("dashboard.html", stats=stats)
+    return render_template(
+        "dashboard.html",
+        stats=stats,
+        monthly_labels=monthly_labels,
+        monthly_income=monthly_income,
+        monthly_expense=monthly_expense,
+    )
 
 
 @app.route("/animals")
@@ -76,7 +118,10 @@ def delete_animal(animal_id):
     db.session.delete(animal)
     db.session.commit()
     return redirect(url_for("animals"))
-
+@app.route("/animals/<int:animal_id>")
+def animal_detail(animal_id):
+    animal = Animal.query.get_or_404(animal_id)
+    return render_template("animals/detail.html", animal=animal)
 @app.route("/crops")
 def crops():
     all_crops = Crop.query.order_by(Crop.id.desc()).all()
@@ -193,5 +238,42 @@ def delete_staff(staff_id):
     db.session.delete(member)
     db.session.commit()
     return redirect(url_for("staff"))
+@app.route("/finance")
+def finance():
+    all_transactions = Transaction.query.order_by(Transaction.date.desc()).all()
+    income = sum(t.amount for t in all_transactions if t.type == "Income")
+    expense = sum(t.amount for t in all_transactions if t.type == "Expense")
+    return render_template(
+        "finance/finance.html",
+        transactions=all_transactions,
+        income=income,
+        expense=expense,
+        balance=income - expense,
+    )
+
+
+@app.route("/finance/add", methods=["GET", "POST"])
+def add_transaction():
+    if request.method == "POST":
+        transaction = Transaction(
+            date=datetime.strptime(request.form["date"], "%Y-%m-%d").date(),
+            type=request.form["type"],
+            category=request.form.get("category"),
+            amount=float(request.form["amount"]),
+            description=request.form.get("description"),
+        )
+        db.session.add(transaction)
+        db.session.commit()
+        return redirect(url_for("finance"))
+
+    return render_template("finance/add_transaction.html")
+
+
+@app.route("/finance/<int:transaction_id>/delete", methods=["POST"])
+def delete_transaction(transaction_id):
+    transaction = Transaction.query.get_or_404(transaction_id)
+    db.session.delete(transaction)
+    db.session.commit()
+    return redirect(url_for("finance"))
 if __name__ == "__main__":
     app.run(debug=True)

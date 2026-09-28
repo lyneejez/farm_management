@@ -1,32 +1,32 @@
 {% extends "base.html" %}
 {% block title %}Crops - Farm Manager{% endblock %}
-{% block content %}
-  <h1>Crops</h1>
-  <p class="subtitle">{{ crops|length }} record(s)</p>
-  <a href="{{ url_for('add_crop') }}" class="btn">+ Add Crop</a>
+{% block page_title %}Crops{% endblock %}
+{% block page_subtitle %}{{ crops|length }} record(s){% endblock %}
 
-  <div class="card" style="margin-top:16px;">
+{% block content %}
+  <div style="margin-bottom:16px;">
+    <a href="{{ url_for('add_crop') }}" class="btn">+ Add Crop</a>
+  </div>
+
+  <div class="card">
     {% if crops %}
-    <table style="width:100%; border-collapse: collapse;">
+    <table>
       <thead>
         <tr>
-          <th style="text-align:left; padding:8px; border-bottom:1px solid #dfe3da;">Name</th>
-          <th style="text-align:left; padding:8px; border-bottom:1px solid #dfe3da;">Field</th>
-          <th style="text-align:left; padding:8px; border-bottom:1px solid #dfe3da;">Area (acres)</th>
-<th style="text-align:left; padding:8px; border-bottom:1px solid #dfe3da;">Status</th>
-<th style="text-align:left; padding:8px; border-bottom:1px solid #dfe3da;">Actions</th>        </tr>
+          <th>Name</th><th>Field</th><th>Area (acres)</th><th>Status</th><th></th>
+        </tr>
       </thead>
       <tbody>
         {% for c in crops %}
         <tr>
-          <td style="padding:8px; border-bottom:1px solid #dfe3da;">{{ c.name }}</td>
-          <td style="padding:8px; border-bottom:1px solid #dfe3da;">{{ c.field_location or '-' }}</td>
-          <td style="padding:8px; border-bottom:1px solid #dfe3da;">{{ c.area_acres or '-' }}</td>
-          <td style="padding:8px; border-bottom:1px solid #dfe3da;">{{ c.status }}</td>
-          <td style="padding:8px; border-bottom:1px solid #dfe3da;">
+          <td>{{ c.name }}</td>
+          <td>{{ c.field_location or '-' }}</td>
+          <td>{{ c.area_acres or '-' }}</td>
+          <td>{{ c.status }}</td>
+          <td>
             <a href="{{ url_for('edit_crop', crop_id=c.id) }}" class="btn secondary" style="padding:5px 10px; font-size:0.8rem;">Edit</a>
-<form method="POST" action="{{ url_for('delete_crop', crop_id=c.id) }}" style="display:inline;" onsubmit="return confirm('Delete {{ c.name }}?');">
-              <button type="submit" class="btn danger" style="padding:5px 10px; font-size:0.8rem;">Delete</button>
+            <form method="POST" action="{{ url_for('delete_crop', crop_id=c.id) }}" style="display:inline;" onsubmit="return confirm('Remove {{ c.name }}?');">
+              <button type="submit" class="btn" style="background:#d64545; padding:5px 10px; font-size:0.8rem;">Delete</button>
             </form>
           </td>
         </tr>
@@ -34,7 +34,7 @@
       </tbody>
     </table>
     {% else %}
-    <p style="color:#6b6f66;">No crops yet.</p>
+    <p style="color:#7a877e;">No crops yet.</p>
     {% endif %}
   </div>
 {% endblock %}

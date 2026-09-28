@@ -1,31 +1,94 @@
 {% extends "base.html" %}
 {% block title %}Dashboard - Farm Manager{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block page_subtitle %}Track and manage your farm at a glance{% endblock %}
+
 {% block content %}
-  <h1>Farm Dashboard</h1>
-  <p class="subtitle">Overview of your animals, crops, staff, and finances.</p>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="icon-badge"></div>
+      <div>
+        <div class="value">{{ stats.total_animals }}</div>
+        <div class="label">Total Animals</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="icon-badge danger">🩺</div>
+      <div>
+        <div class="value">{{ stats.sick_animals }}</div>
+        <div class="label">Sick Animals</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="icon-badge">🌱</div>
+      <div>
+        <div class="value">{{ stats.total_crops }}</div>
+        <div class="label">Crops Tracked</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="icon-badge blue">👥</div>
+      <div>
+        <div class="value">{{ stats.active_staff }}</div>
+        <div class="label">Active Staff</div>
+      </div>
+    </div>
+  </div>
 
   <div class="stats-grid">
     <div class="stat-card">
-      <div class="value">{{ stats.total_animals }}</div>
-      <div class="label">Total Animals</div>
+      <div class="icon-badge">💰</div>
+      <div>
+        <div class="value">{{ stats.income }}</div>
+        <div class="label">Total Income</div>
+      </div>
     </div>
     <div class="stat-card">
-      <div class="value">{{ stats.sick_animals }}</div>
-      <div class="label">Sick Animals</div>
+      <div class="icon-badge danger">💸</div>
+      <div>
+        <div class="value">{{ stats.expense }}</div>
+        <div class="label">Total Expenses</div>
+      </div>
     </div>
     <div class="stat-card">
-      <div class="value">{{ stats.total_crops }}</div>
-      <div class="label">Crops Tracked</div>
-    </div>
-    <div class="stat-card">
-      <div class="value">{{ stats.active_staff }}</div>
-      <div class="label">Active Staff</div>
+      <div class="icon-badge warning">⚖️</div>
+      <div>
+        <div class="value">{{ stats.balance }}</div>
+        <div class="label">Net Balance</div>
+      </div>
     </div>
   </div>
 
   <div class="card">
-    <p style="color: #6b6f66; margin:0;">
-    Animals, Crops, Staff, and Finance.
-    </p>
+    <h2>Income vs Expenses</h2>
+    <canvas id="financeChart" width="400" height="90"></canvas>
   </div>
+
+  <script id="finance-data" type="application/json">
+    {
+      "labels": {{ monthly_labels | tojson }},
+      "income": {{ monthly_income | tojson }},
+      "expense": {{ monthly_expense | tojson }}
+    }
+  </script>
+
+  <script>
+    const financeDataElement = document.getElementById('finance-data');
+    const financeData = JSON.parse(financeDataElement.textContent);
+    const finance = document.getElementById('financeChart');
+
+    if (finance) {
+      new Chart(finance.getContext('2d'), {
+        type: 'bar',
+        data: {
+          labels: financeData.labels,
+          datasets: [
+            { label: 'Income', data: financeData.income, backgroundColor: '#2f6d3a' },
+            { label: 'Expenses', data: financeData.expense, backgroundColor: '#d64545' }
+          ]
+        },
+        options: { responsive: true }
+      });
+    }
+  </script>
 {% endblock %}

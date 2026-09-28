@@ -1,35 +1,33 @@
 {% extends "base.html" %}
 {% block title %}Staff - Farm Manager{% endblock %}
-{% block content %}
-  <h1>Staff</h1>
-  <p class="subtitle">{{ staff|length }} record(s)</p>
-  <a href="{{ url_for('add_staff') }}" class="btn">+ Add Staff</a>
+{% block page_title %}Staff{% endblock %}
+{% block page_subtitle %}{{ staff|length }} record(s){% endblock %}
 
-  <div class="card" style="margin-top:16px;">
+{% block content %}
+  <div style="margin-bottom:16px;">
+    <a href="{{ url_for('add_staff') }}" class="btn">+ Add Staff</a>
+  </div>
+
+  <div class="card">
     {% if staff %}
-    <table style="width:100%; border-collapse: collapse;">
+    <table>
       <thead>
         <tr>
-          <th style="text-align:left; padding:8px; border-bottom:1px solid #dfe3da;">Name</th>
-          <th style="text-align:left; padding:8px; border-bottom:1px solid #dfe3da;">Role</th>
-          <th style="text-align:left; padding:8px; border-bottom:1px solid #dfe3da;">Phone</th>
-          <th style="text-align:left; padding:8px; border-bottom:1px solid #dfe3da;">Salary</th>
-          <th style="text-align:left; padding:8px; border-bottom:1px solid #dfe3da;">Status</th>
-          <th style="padding:8px; border-bottom:1px solid #dfe3da;">Actions</th>
+          <th>Name</th><th>Role</th><th>Phone</th><th>Salary</th><th>Status</th><th></th>
         </tr>
       </thead>
       <tbody>
         {% for s in staff %}
         <tr>
-          <td style="padding:8px; border-bottom:1px solid #dfe3da;">{{ s.name }}</td>
-          <td style="padding:8px; border-bottom:1px solid #dfe3da;">{{ s.role or '-' }}</td>
-          <td style="padding:8px; border-bottom:1px solid #dfe3da;">{{ s.phone or '-' }}</td>
-          <td style="padding:8px; border-bottom:1px solid #dfe3da;">{{ "%.2f"|format(s.monthly_salary) }}</td>
-          <td style="padding:8px; border-bottom:1px solid #dfe3da;">{{ s.status }}</td>
-          <td style="padding:8px; border-bottom:1px solid #dfe3da;">
+          <td>{{ s.name }}</td>
+          <td>{{ s.role or '-' }}</td>
+          <td>{{ s.phone or '-' }}</td>
+          <td>{{ "%.2f"|format(s.monthly_salary) }}</td>
+          <td>{{ s.status }}</td>
+          <td>
             <a href="{{ url_for('edit_staff', staff_id=s.id) }}" class="btn secondary" style="padding:5px 10px; font-size:0.8rem;">Edit</a>
             <form method="POST" action="{{ url_for('delete_staff', staff_id=s.id) }}" style="display:inline;" onsubmit="return confirm('Remove {{ s.name }}?');">
-              <button type="submit" class="btn" style="background:#b3382c; padding:5px 10px; font-size:0.8rem;">Delete</button>
+              <button type="submit" class="btn" style="background:#d64545; padding:5px 10px; font-size:0.8rem;">Delete</button>
             </form>
           </td>
         </tr>
@@ -37,7 +35,7 @@
       </tbody>
     </table>
     {% else %}
-    <p style="color:#6b6f66;">No staff yet.</p>
+    <p style="color:#7a877e;">No staff yet.</p>
     {% endif %}
   </div>
 {% endblock %}

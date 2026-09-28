@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Finance - Farm Manager{% endblock %}
+{% block page_title %}Finance{% endblock %}
+{% block page_subtitle %}{{ transactions|length }} transaction(s){% endblock %}
+
+{% block content %}
+  <div style="margin-bottom:16px;">
+    <a href="{{ url_for('add_transaction') }}" class="btn">+ Add Transaction</a>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="icon-badge">💰</div>
+      <div>
+        <div class="value">{{ "%.2f"|format(income) }}</div>
+        <div class="label">Total Income</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="icon-badge danger">💸</div>
+      <div>
+        <div class="value">{{ "%.2f"|format(expense) }}</div>
+        <div class="label">Total Expenses</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="icon-badge warning">⚖️</div>
+      <div>
+        <div class="value">{{ "%.2f"|format(balance) }}</div>
+        <div class="label">Net Balance</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    {% if transactions %}
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th><th>Type</th><th>Category</th><th>Amount</th><th>Description</th><th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for t in transactions %}
+        <tr>
+          <td>{{ t.date }}</td>
+          <td>{{ t.type }}</td>
+          <td>{{ t.category or '-' }}</td>
+          <td>{{ "%.2f"|format(t.amount) }}</td>
+          <td>{{ t.description or '-' }}</td>
+          <td>
+            <form method="POST" action="{{ url_for('delete_transaction', transaction_id=t.id) }}" style="display:inline;" onsubmit="return confirm('Remove this transaction?');">
+              <button type="submit" class="btn" style="background:#d64545; padding:5px 10px; font-size:0.8rem;">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p style="color:#7a877e;">No transactions yet.</p>
+    {% endif %}
+  </div>
+{% endblock %}

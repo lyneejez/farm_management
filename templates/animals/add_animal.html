@@ -1,7 +1,9 @@
 {% extends "base.html" %}
-{% block title %}Add Animal - Farm Manager{% endblock %}
+{% block title %}{{ 'Edit' if animal else 'Add' }} Animal - Farm Manager{% endblock %}
+{% block page_title %}{{ 'Edit' if animal else 'Add' }} Animal{% endblock %}
+{% block page_subtitle %}{{ 'Update this record' if animal else 'Create a new animal record' }}{% endblock %}
+
 {% block content %}
-<h1>{{ 'Edit' if animal else 'Add' }} Animal</h1>  <div class="card">
     <form method="POST">
       <div class="field" style="margin-bottom:12px;">
         <label>Name</label>

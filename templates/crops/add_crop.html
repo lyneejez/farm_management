@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% block title %}{{ 'Edit' if crop else 'Add' }} Crop - Farm Manager{% endblock %}
+{% block page_title %}{{ 'Edit' if crop else 'Add' }} Crop{% endblock %}
+{% block page_subtitle %}{{ 'Update this record' if crop else 'Create a new crop record' }}{% endblock %}
+
 {% block content %}
-  <h1>{{ 'Edit' if crop else 'Add' }} Crop</h1>
   <div class="card">
     <form method="POST">
       <div class="field" style="margin-bottom:12px;">

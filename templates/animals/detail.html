@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}{{ animal.name }} - Farm Manager{% endblock %}
+{% block page_title %}{{ animal.name }}{% endblock %}
+{% block page_subtitle %}{{ animal.species }}{{ ' · ' + animal.breed if animal.breed }}{% endblock %}
+
+{% block content %}
+  <div style="margin-bottom:16px;">
+    <a href="{{ url_for('animals') }}" class="btn secondary">← Back to Animals</a>
+    <a href="{{ url_for('edit_animal', animal_id=animal.id) }}" class="btn">Edit</a>
+    <form method="POST" action="{{ url_for('delete_animal', animal_id=animal.id) }}" style="display:inline;" onsubmit="return confirm('Remove {{ animal.name }}?');">
+      <button type="submit" class="btn" style="background:#d64545;">Delete</button>
+    </form>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="icon-badge">🎂</div>
+      <div>
+        <div class="value">{{ animal.age_display() }}</div>
+        <div class="label">Age</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="icon-badge blue">⚖️</div>
+      <div>
+        <div class="value">{{ animal.weight_kg or '—' }}</div>
+        <div class="label">Weight (kg)</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="icon-badge {{ 'danger' if animal.health_status == 'Sick' else ('warning' if animal.health_status == 'Under Treatment' else '') }}">🩺</div>
+      <div>
+        <div class="value">{{ animal.health_status }}</div>
+        <div class="label">Health Status</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Profile</h2>
+    <table>
+      <tbody>
+        <tr><td style="color:#7a877e; width:180px;">Name</td><td>{{ animal.name }}</td></tr>
+        <tr><td style="color:#7a877e;">Species</td><td>{{ animal.species }}</td></tr>
+        <tr><td style="color:#7a877e;">Breed</td><td>{{ animal.breed or '—' }}</td></tr>
+        <tr><td style="color:#7a877e;">Gender</td><td>{{ animal.gender or '—' }}</td></tr>
+        <tr><td style="color:#7a877e;">Birth Date</td><td>{{ animal.birth_date or '—' }}</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Notes</h2>
+    <p style="color:#1f2a24; margin:0;">{{ animal.notes or 'No notes recorded.' }}</p>
+  </div>
+{% endblock %}
