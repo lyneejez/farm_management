@@ -19,8 +19,7 @@
       <tbody>
         {% for a in animals %}
         <tr>
-          <td>{{ a.name }}</td>
-          <td>{{ a.species }}</td>
+<td><a href="{{ url_for('animal_detail', animal_id=a.id) }}" style="color:#2f6d3a; font-weight:600; text-decoration:none;">{{ a.name }}</a></td>          <td>{{ a.species }}</td>
           <td>{{ a.breed or '-' }}</td>
           <td>{{ a.age_display() }}</td>
           <td>{{ a.health_status }}</td>

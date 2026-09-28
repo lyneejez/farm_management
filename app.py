@@ -118,7 +118,10 @@ def delete_animal(animal_id):
     db.session.delete(animal)
     db.session.commit()
     return redirect(url_for("animals"))
-
+@app.route("/animals/<int:animal_id>")
+def animal_detail(animal_id):
+    animal = Animal.query.get_or_404(animal_id)
+    return render_template("animals/detail.html", animal=animal)
 @app.route("/crops")
 def crops():
     all_crops = Crop.query.order_by(Crop.id.desc()).all()
