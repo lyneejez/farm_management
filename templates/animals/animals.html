@@ -4,9 +4,28 @@
 {% block page_subtitle %}{{ animals|length }} record(s){% endblock %}
 
 {% block content %}
-  <div style="margin-bottom:16px;">
-    <a href="{{ url_for('add_animal') }}" class="btn">+ Add Animal</a>
-  </div>
+<div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:16px;">
+  <form method="GET" id="filterForm" style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+  <input type="text" name="q" id="searchBox" value="{{ search }}" placeholder="Search name, species or breed..."
+         style="padding:9px 12px; border:1px solid #e7ece8; border-radius:8px; min-width:200px;">
+
+  <select name="species" onchange="this.form.submit()" style="padding:9px 12px; border:1px solid #e7ece8; border-radius:8px;">
+    <option value="">All species</option>
+    {% for sp in species_list %}
+    <option value="{{ sp }}" {{ 'selected' if sp == selected_species }}>{{ sp }}</option>
+    {% endfor %}
+  </select>
+
+  <select name="health" onchange="this.form.submit()" style="padding:9px 12px; border:1px solid #e7ece8; border-radius:8px;">
+    <option value="">All health statuses</option>
+    {% for h in ["Healthy", "Sick", "Under Treatment"] %}
+    <option value="{{ h }}" {{ 'selected' if h == selected_health }}>{{ h }}</option>
+    {% endfor %}
+  </select>
+</form>
+
+  <a href="{{ url_for('add_animal') }}" class="btn">+ Add Animal</a>
+</div>
 
   <div class="card">
     {% if animals %}
@@ -34,7 +53,26 @@
       </tbody>
     </table>
     {% else %}
-    <p style="color:#7a877e;">No animals yet.</p>
-    {% endif %}
+<p style="color:#7a877e;">
+  {% if search or selected_species or selected_health %}No animals match your filters.{% else %}No animals yet.{% endif %}
+</p>    {% endif %}
   </div>
+  <script>
+  const searchBox = document.getElementById("searchBox");
+  let searchTimer;
+
+  // Submit shortly after the user stops typing
+  searchBox.addEventListener("input", () => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => {
+      document.getElementById("filterForm").submit();
+    }, 400);
+  });
+
+  // After the page reloads with a search term, put the cursor back at the end
+  if (searchBox.value) {
+    searchBox.focus();
+    searchBox.setSelectionRange(searchBox.value.length, searchBox.value.length);
+  }
+</script>
 {% endblock %}
