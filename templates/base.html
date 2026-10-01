@@ -5,26 +5,27 @@
   <title>{% block title %}Farm Manager{% endblock %}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
   <div class="app-shell">
     <div class="sidebar">
-      <div class="brand">🌾 Smart Farm</div>
+<div class="brand"><i class="fa-solid fa-leaf"></i> Smart Farm</div>
       <nav>
         <a href="{{ url_for('dashboard') }}" class="{{ 'active' if request.endpoint=='dashboard' }}">
-          <span class="icon">🏠</span> Dashboard
+<span class="icon"><i class="fa-solid fa-gauge"></i></span> Dashboard
         </a>
         <a href="{{ url_for('animals') }}" class="{{ 'active' if request.endpoint in ['animals','add_animal','edit_animal'] }}">
-          <span class="icon">🐄</span> Animals
+          <span class="icon"><i class="fa-solid fa-cow"></i></span> Animals
         </a>
         <a href="{{ url_for('crops') }}" class="{{ 'active' if request.endpoint in ['crops','add_crop','edit_crop'] }}">
-          <span class="icon">🌱</span> Crops
+          <span class="icon"><i class="fa-solid fa-seedling"></i></span> Crops
         </a>
         <a href="{{ url_for('staff') }}" class="{{ 'active' if request.endpoint in ['staff','add_staff','edit_staff'] }}">
-          <span class="icon">👥</span> Staff
+          <span class="icon"><i class="fa-solid fa-users"></i></span> Staff
         </a>
         <a href="{{ url_for('finance') }}" class="{{ 'active' if request.endpoint in ['finance','add_transaction'] }}">
-          <span class="icon">💰</span> Finance
+          <span class="icon"><i class="fa-solid fa-coins"></i></span> Finance
         </a>
       </nav>
     </div>

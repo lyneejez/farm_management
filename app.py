@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 from models import db, Animal, Crop, Staff, Transaction
-from sqlalchemy import func
+from sqlalchemy import func, or_
 from flask import Flask, render_template, request, redirect, url_for
 from datetime import datetime, date
 
@@ -67,8 +67,36 @@ def dashboard():
 
 @app.route("/animals")
 def animals():
-    all_animals = Animal.query.order_by(Animal.id.desc()).all()
-    return render_template("animals/animals.html", animals=all_animals)
+    search = request.args.get("q", "").strip()
+    species = request.args.get("species", "")
+    health = request.args.get("health", "")
+
+    query = Animal.query
+    if search:
+        like = f"%{search}%"
+        query = query.filter(or_(
+            Animal.name.ilike(like),
+            Animal.species.ilike(like),
+            Animal.breed.ilike(like),
+        ))
+    if species:
+        query = query.filter_by(species=species)
+    if health:
+        query = query.filter_by(health_status=health)
+
+    all_animals = query.order_by(Animal.id.desc()).all()
+
+    species_list = [s[0] for s in db.session.query(Animal.species).distinct().order_by(Animal.species).all()]
+
+    return render_template(
+        "animals/animals.html",
+        animals=all_animals,
+        species_list=species_list,
+        search=search,
+        selected_species=species,
+        selected_health=health,
+    )
+
 
 @app.route("/animals/add", methods=["GET", "POST"])
 def add_animal():

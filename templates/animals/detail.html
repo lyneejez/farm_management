@@ -14,21 +14,23 @@
 
   <div class="stats-grid">
     <div class="stat-card">
-      <div class="icon-badge">🎂</div>
+      <div class="icon-badge"><i class="fa-solid fa-cake-candles"></i></div>
       <div>
         <div class="value">{{ animal.age_display() }}</div>
         <div class="label">Age</div>
       </div>
     </div>
     <div class="stat-card">
-      <div class="icon-badge blue">⚖️</div>
+      <div class="icon-badge blue"><i class="fa-solid fa-weight-scale"></i></div>
       <div>
         <div class="value">{{ animal.weight_kg or '—' }}</div>
         <div class="label">Weight (kg)</div>
       </div>
     </div>
     <div class="stat-card">
-      <div class="icon-badge {{ 'danger' if animal.health_status == 'Sick' else ('warning' if animal.health_status == 'Under Treatment' else '') }}">🩺</div>
+      <div class="icon-badge {{ 'danger' if animal.health_status == 'Sick' else ('warning' if animal.health_status == 'Under Treatment' else '') }}">
+        <i class="fa-solid fa-heart-pulse"></i>
+      </div>
       <div>
         <div class="value">{{ animal.health_status }}</div>
         <div class="label">Health Status</div>
