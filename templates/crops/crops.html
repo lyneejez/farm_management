@@ -13,14 +13,14 @@
     <table>
       <thead>
         <tr>
-          <th>Name</th><th>Field</th><th>Area (acres)</th><th>Status</th><th></th>
+          <th>Name</th>
+          <th>Field</th><th>Area (acres)</th><th>Status</th><th></th>
         </tr>
       </thead>
       <tbody>
         {% for c in crops %}
         <tr>
-          <td>{{ c.name }}</td>
-          <td>{{ c.field_location or '-' }}</td>
+<td><a href="{{ url_for('crop_detail', crop_id=c.id) }}" style="color:#2f6d3a; font-weight:600; text-decoration:none;">{{ c.name }}</a></td>          <td>{{ c.field_location or '-' }}</td>
           <td>{{ c.area_acres or '-' }}</td>
           <td>{{ c.status }}</td>
           <td>
