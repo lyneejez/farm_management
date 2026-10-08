@@ -19,8 +19,7 @@
       <tbody>
         {% for s in staff %}
         <tr>
-          <td>{{ s.name }}</td>
-          <td>{{ s.role or '-' }}</td>
+<td><a href="{{ url_for('staff_detail', staff_id=s.id) }}" style="color:#2f6d3a; font-weight:600; text-decoration:none;">{{ s.name }}</a></td>          <td>{{ s.role or '-' }}</td>
           <td>{{ s.phone or '-' }}</td>
           <td>{{ "%.2f"|format(s.monthly_salary) }}</td>
           <td>{{ s.status }}</td>

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}{{ crop.name }} - Farm Manager{% endblock %}
+{% block page_title %}{{ crop.name }}{% endblock %}
+{% block page_subtitle %}{{ crop.field_location or 'No field set' }}{% endblock %}
+
+{% block content %}
+  <div style="margin-bottom:16px;">
+    <a href="{{ url_for('crops') }}" class="btn secondary">← Back to Crops</a>
+    <a href="{{ url_for('edit_crop', crop_id=crop.id) }}" class="btn">Edit</a>
+    <form method="POST" action="{{ url_for('delete_crop', crop_id=crop.id) }}" style="display:inline;" onsubmit="return confirm('Remove {{ crop.name }}?');">
+      <button type="submit" class="btn" style="background:#d64545;">Delete</button>
+    </form>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="icon-badge"><i class="fa-solid fa-ruler-combined"></i></div>
+      <div>
+        <div class="value">{{ crop.area_acres or '—' }}</div>
+        <div class="label">Area (acres)</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="icon-badge {{ 'warning' if crop.status == 'Growing' else ('blue' if crop.status == 'Planted' else '') }}">
+        <i class="fa-solid fa-seedling"></i>
+      </div>
+      <div>
+        <div class="value">{{ crop.status }}</div>
+        <div class="label">Status</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="icon-badge"><i class="fa-solid fa-weight-hanging"></i></div>
+      <div>
+        <div class="value">{{ crop.yield_amount_kg or '—' }}</div>
+        <div class="label">Yield (kg)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Profile</h2>
+    <table>
+      <tbody>
+        <tr><td style="color:#7a877e; width:180px;">Crop Name</td><td>{{ crop.name }}</td></tr>
+        <tr><td style="color:#7a877e;">Field / Location</td><td>{{ crop.field_location or '—' }}</td></tr>
+        <tr><td style="color:#7a877e;">Planting Date</td><td>{{ crop.planting_date or '—' }}</td></tr>
+        <tr><td style="color:#7a877e;">Expected Harvest Date</td><td>{{ crop.expected_harvest_date or '—' }}</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Notes</h2>
+    <p style="color:#1f2a24; margin:0;">{{ crop.notes or 'No notes recorded.' }}</p>
+  </div>
+{% endblock %}

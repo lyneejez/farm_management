@@ -154,6 +154,10 @@ def animal_detail(animal_id):
 def crops():
     all_crops = Crop.query.order_by(Crop.id.desc()).all()
     return render_template("crops/crops.html", crops=all_crops)
+@app.route("/crops/<int:crop_id>")
+def crop_detail(crop_id):
+    crop = Crop.query.get_or_404(crop_id)
+    return render_template("crops/details.html", crop=crop)
 @app.route("/crops/add", methods=["GET", "POST"])
 def add_crop():
     if request.method == "POST":
@@ -180,8 +184,6 @@ def add_crop():
         return redirect(url_for("crops"))
 
     return render_template("crops/add_crop.html", crop=None)
-
-
 @app.route("/crops/<int:crop_id>/edit", methods=["GET", "POST"])
 def edit_crop(crop_id):
     crop = Crop.query.get_or_404(crop_id)
@@ -217,7 +219,10 @@ def delete_crop(crop_id):
 def staff():
     all_staff = Staff.query.order_by(Staff.id.desc()).all()
     return render_template("/staff/staff.html", staff=all_staff)
-
+@app.route("/staff/<int:staff_id>")
+def staff_detail(staff_id):
+    member = Staff.query.get_or_404(staff_id)
+    return render_template("staff/details.html", member=member)
 @app.route("/staff/add", methods=["GET", "POST"])
 def add_staff():
     if request.method == "POST":
