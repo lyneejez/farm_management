@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
@@ -16,6 +16,7 @@ class Animal(db.Model):
     weight_kg = db.Column(db.Float)
     health_status = db.Column(db.String(30), default="Healthy")
     notes = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def age_display(self):
         if not self.birth_date:
@@ -39,6 +40,7 @@ class Crop(db.Model):
     status = db.Column(db.String(30), default="Planted")  # Planted/Growing/Harvested
     yield_amount_kg = db.Column(db.Float)
     notes = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 class Staff(db.Model):
     __tablename__ = "staff"
 
@@ -49,6 +51,7 @@ class Staff(db.Model):
     hire_date = db.Column(db.Date)
     monthly_salary = db.Column(db.Float, default=0)
     status = db.Column(db.String(20), default="Active")  # Active/Inactive
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 class Transaction(db.Model):
     __tablename__ = "transactions"
 
